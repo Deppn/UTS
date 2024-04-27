@@ -7,10 +7,6 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  * @returns {Array}
  */
 async function getUsers(pageNumber, pageSize, search, sort) {
-  // Default values
-  pageNumber = pageNumber ? parseInt(pageNumber) : 1;
-  pageSize = pageSize ? parseInt(pageSize) : 0;
-
   const filter = {};
   if (search) {
     const [fieldName, searchKey] = search.split(':');
@@ -44,7 +40,7 @@ async function getUsers(pageNumber, pageSize, search, sort) {
     totalUsers = await User.countDocuments(filter);
 
     // Hitung total halaman berdasarkan total pengguna dan ukuran halaman
-    totalPages = Math.ceil(totalUsers / pageSize);
+    totalPages = 1;
 
     // Ambil semua pengguna yang cocok dengan kriteria pencarian tanpa pembatasan halaman
     users = await User.find(filter).sort({ [sortField]: sortOrder });

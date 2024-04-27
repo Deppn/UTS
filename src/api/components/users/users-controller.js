@@ -214,7 +214,7 @@ async function getUsers(request, response, next) {
 }
 
 module.exports = {
-  changePassword, //DISINI YAKK
+  changePassword,
   getUsers,
   getUser,
   createUser,

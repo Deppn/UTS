@@ -1,18 +1,6 @@
 const joi = require('joi');
 
 module.exports = {
-  getUsers: {
-    query: {
-      page_number: joi.number().integer().min(1).label('Page Number'),
-      page_size: joi.number().integer().min(1).label('Page Size'),
-      sort: joi
-        .string()
-        .pattern(/^(name|email):(asc|desc)$/)
-        .label('Sort'),
-      search: joi.string().allow('').label('Search'),
-    },
-  },
-
   createUser: {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
