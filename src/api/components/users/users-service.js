@@ -11,19 +11,19 @@ async function getUsers(pageNumber, pageSize, search, sort) {
   pageNumber = pageNumber ? parseInt(pageNumber) : 1;
   pageSize = pageSize ? parseInt(pageSize) : 0;
 
-  pageNumber = Math.max(1, pageNumber);
-  pageSize = Math.max(1, pageSize);
-
   const filter = {};
   if (search) {
-    filter.email = { $regex: search, $options: 'i' };
+    const [fieldName, searchKey] = search.split(':');
+    if (fieldName === 'email' || fieldName === 'name') {
+      filter[fieldName] = { $regex: searchKey, $options: 'i' };
+    }
   }
 
   let sortField = 'email';
   let sortOrder = 1;
   if (sort) {
     const [field, order] = sort.split(':');
-    if (field === 'name' || field === 'email') {
+    if (field === 'email' || field === 'name') {
       sortField = field;
     }
     if (order === 'desc') {
@@ -33,16 +33,46 @@ async function getUsers(pageNumber, pageSize, search, sort) {
 
   const skip = (pageNumber - 1) * pageSize;
 
-  const users = await User.find(filter)
-    .sort({ [sortField]: sortOrder })
-    .skip(skip)
-    .limit(pageSize);
+  let users;
+  let totalUsers;
+  let totalPages;
+  let hasPreviousPage;
+  let hasNextPage;
 
-  const totalUsers = await User.countDocuments(filter);
-  const totalPages = Math.ceil(totalUsers / pageSize);
+  if (!pageNumber || !pageSize) {
+    // Ambil total pengguna yang cocok dengan kriteria pencarian
+    totalUsers = await User.countDocuments(filter);
 
-  const hasPreviousPage = pageNumber > 1;
-  const hasNextPage = pageNumber < totalPages;
+    // Hitung total halaman berdasarkan total pengguna dan ukuran halaman
+    totalPages = Math.ceil(totalUsers / pageSize);
+
+    // Ambil semua pengguna yang cocok dengan kriteria pencarian tanpa pembatasan halaman
+    users = await User.find(filter).sort({ [sortField]: sortOrder });
+
+    // Set nilai halaman ke 1 dan ukuran halaman ke total pengguna yang cocok
+    pageNumber = 1;
+    pageSize = totalUsers;
+
+    // Tandai bahwa tidak ada halaman sebelumnya atau berikutnya karena semua data ditampilkan di satu halaman
+    hasPreviousPage = false;
+    hasNextPage = false;
+  } else {
+    // Ambil pengguna yang cocok dengan kriteria pencarian dengan pembatasan halaman
+    users = await User.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(pageSize);
+
+    // Hitung total pengguna yang cocok dengan kriteria pencarian
+    totalUsers = await User.countDocuments(filter);
+
+    // Hitung total halaman berdasarkan total pengguna dan ukuran halaman
+    totalPages = Math.ceil(totalUsers / pageSize);
+
+    // Tentukan apakah ada halaman sebelumnya atau berikutnya
+    hasPreviousPage = pageNumber > 1;
+    hasNextPage = pageNumber < totalPages;
+  }
 
   return {
     page_number: pageNumber,
