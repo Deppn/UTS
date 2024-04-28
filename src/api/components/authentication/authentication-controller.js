@@ -19,9 +19,10 @@ async function login(request, response, next) {
     );
 
     if (!loginSuccess) {
+      const attemptCount = authenticationServices.getLoginAttemptCount(email);
       throw errorResponder(
         errorTypes.INVALID_CREDENTIALS,
-        'Wrong email or password'
+        `User ${email} gagal login. Attempt = ${attemptCount}`
       );
     }
 
