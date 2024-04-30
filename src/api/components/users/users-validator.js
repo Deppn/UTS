@@ -8,8 +8,8 @@ module.exports = {
       password: joi.string().min(8).max(30).required().label('Password'),
       password_confirm: joi
         .string()
-        .min(6)
-        .max(32)
+        .min(8)
+        .max(30)
         .required()
         .label('Password'),
     },
