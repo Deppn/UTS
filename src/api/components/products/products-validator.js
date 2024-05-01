@@ -18,4 +18,16 @@ module.exports = {
       price: joi.number().min(0).required().label('Price'),
     },
   },
+  // products-validator.js
+  addToCart: {
+    body: {
+      productId: joi.string().required().label('Product ID'),
+    },
+  },
+
+  removeFromCart: {
+    body: {
+      productId: joi.string().required().label('Product ID'),
+    },
+  },
 };

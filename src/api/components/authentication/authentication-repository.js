@@ -5,10 +5,10 @@ const { User } = require('../../../models');
  * @param {string} email - Email
  * @returns {Promise}
  */
-async function getUserByEmail(email) {
+async function getUsersEmail(email) {
   return User.findOne({ email });
 }
 
 module.exports = {
-  getUserByEmail,
+  getUsersEmail,
 };

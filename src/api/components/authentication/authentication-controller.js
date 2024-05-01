@@ -13,17 +13,24 @@ async function login(request, response, next) {
 
   try {
     // Check login credentials
-    const loginSuccess = await authenticationServices.checkLoginCredentials(
+    const loginSuccess = await authenticationServices.checkLogin(
       email,
       password
     );
 
     if (!loginSuccess) {
-      const attemptCount = authenticationServices.getLoginAttemptCount(email);
-      throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
-        `User ${email} gagal login. Attempt = ${attemptCount}`
-      );
+      const attemptCount = authenticationServices.getLoginAttempt(email);
+      if (attemptCount == 5) {
+        throw errorResponder(
+          errorTypes.INVALID_CREDENTIALS,
+          `User ${email} gagal login. Attempt = ${attemptCount}. Limit reached`
+        );
+      } else {
+        throw errorResponder(
+          errorTypes.INVALID_CREDENTIALS,
+          `User ${email} gagal login. Attempt = ${attemptCount}`
+        );
+      }
     }
 
     return response.status(200).json(loginSuccess);

@@ -14,15 +14,15 @@ let loginAttempts = {};
  * @param {string} password - Password
  * @returns {object} An object containing, among others, the JWT token if the email and password are matched. Otherwise returns null.
  */
-async function checkLoginCredentials(email, password) {
-  const user = await authenticationRepository.getUserByEmail(email);
+async function checkLogin(email, password) {
+  const user = await authenticationRepository.getUsersEmail(email);
   const currentTime = new Date();
   if (
     loginAttempts[email] &&
     loginAttempts[email].count >= MAX_LOGIN_ATTEMPTS
   ) {
-    const timeSinceLastAttempt = currentTime - loginAttempts[email].lastAttempt;
-    if (timeSinceLastAttempt < LOGIN_ATTEMPT_RESET_TIME) {
+    const waktuLogin = currentTime - loginAttempts[email].lastAttempt;
+    if (waktuLogin < LOGIN_ATTEMPT_RESET_TIME) {
       // Return error if login attempts exceed limit and reset time has not elapsed
       throw errorResponder(
         errorTypes.FORBIDDEN,
@@ -68,11 +68,11 @@ async function checkLoginCredentials(email, password) {
  * @param {string} email - Email
  * @returns {number} Number of login attempts
  */
-function getLoginAttemptCount(email) {
+function getLoginAttempt(email) {
   return loginAttempts[email] ? loginAttempts[email].count : 0;
 }
 
 module.exports = {
-  checkLoginCredentials,
-  getLoginAttemptCount,
+  checkLogin,
+  getLoginAttempt,
 };

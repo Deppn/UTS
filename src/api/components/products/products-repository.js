@@ -34,7 +34,7 @@ async function createProduct(productData) {
  * @returns {Promise<Object|null>} Updated product or null if not found
  */
 async function updateProduct(id, updatedData) {
-  return Product.findByIdAndUpdate(id, updatedData, { new: true });
+  return Product.findAndUpdate(id, updatedData, { new: true });
 }
 
 /**
