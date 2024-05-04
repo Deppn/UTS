@@ -2,7 +2,7 @@ const productsService = require('./products-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 /**
- * Handle get list of users request
+ * Handle get list of products request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
@@ -26,7 +26,7 @@ async function getProducts(request, response, next) {
 }
 
 /**
- * Handle get list of users request
+ * Handle get list of product request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
@@ -37,7 +37,7 @@ async function getProduct(request, response, next) {
   try {
     const product = await productsService.getProduct(request.params.id);
     if (!product) {
-      return response.status(404).json({ message: 'Product not found' });
+      return response.status(404).json({ message: 'Produk tidak ditemukan' });
     }
 
     // merubah _id menjadi id dan menghilangkan __v
@@ -53,7 +53,7 @@ async function getProduct(request, response, next) {
   }
 }
 /**
- * Handle get list of users request
+ * Handle create product
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
@@ -96,7 +96,7 @@ async function updateProduct(request, response, next) {
   }
 }
 /**
- * Handle get list of users request
+ * Handle delete product
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
@@ -109,7 +109,7 @@ async function deleteProduct(request, response, next) {
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
-        'Failed to delete product'
+        'Gagal menghapus produk'
       );
     }
     return response.status(204).json({ id: id });

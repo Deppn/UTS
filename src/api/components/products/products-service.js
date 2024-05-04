@@ -18,8 +18,8 @@ async function createProduct(id, name, description, price) {
     price,
   });
 
-  // Rename _id to id and remove __v in the response
-  const { _id, __v, ...removeIdV } = product.toObject(); // Convert Mongoose document to plain JavaScript object
+  // merubah _id menjadi id dan menghilangkan __v
+  const { _id, __v, ...removeIdV } = product.toObject();
   const createdProduct = { id: _id, ...removeIdV };
 
   return createdProduct;
@@ -33,22 +33,22 @@ async function updateProduct(id, name, description, price) {
       description,
       price,
     },
-    { new: true } // To return the updated document instead of the old one
+    { new: true } // return product yang baru
   );
 
   if (!updatedProduct) {
-    // Handle case where product with the given id is not found
-    throw new Error('Product not found');
+    // kalau tidak ada id yg ditemukan
+    throw new Error('Produk tidak ditemukan');
   }
 
-  // Rename _id to id and remove __v in the response
+  // merubah _id menjadi id dan menghilangkan __v
   const { _id, __v, ...removeIdV } = updatedProduct.toObject();
-  const updatedProductWithoutIdAndV = { id: _id, ...removeIdV };
+  const updatedProducts = { id: _id, ...removeIdV };
 
-  // Add text indicating product has been updated
-  updatedProductWithoutIdAndV.text = 'Product has been updated';
+  // menambahkan text kalau produk sudah diupdate
+  updatedProducts.text = 'Produk telah diupdate';
 
-  return updatedProductWithoutIdAndV;
+  return updatedProducts;
 }
 
 async function deleteProduct(id) {
