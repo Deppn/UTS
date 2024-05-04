@@ -182,12 +182,13 @@ async function deleteUser(request, response, next) {
  */
 async function getUsers(request, response, next) {
   try {
+    //menggunakan query
     const pageNumber = request.query.page_number
-      ? parseInt(request.query.page_number)
-      : 1;
+      ? parseInt(request.query.page_number) //ubah menjadi int
+      : 1; //default
     const pageSize = request.query.page_size
       ? parseInt(request.query.page_size)
-      : 0;
+      : 0; //default
     const search = request.query.search || '';
     const sort = request.query.sort || '';
 

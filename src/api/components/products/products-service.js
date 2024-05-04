@@ -1,4 +1,6 @@
+// src/api/components/products/products-service.js
 const { Product } = require('../../../models');
+const { User } = require('../../../models');
 
 async function getProducts() {
   return Product.find({});
@@ -24,23 +26,44 @@ async function createProduct(id, name, description, price) {
 }
 
 async function updateProduct(id, name, description, price) {
-  return Product.findAndUpdate(id, {
-    name,
-    description,
-    price,
-  });
+  const updatedProduct = await Product.findOneAndUpdate(
+    { _id: id },
+    {
+      name,
+      description,
+      price,
+    },
+    { new: true } // To return the updated document instead of the old one
+  );
+
+  if (!updatedProduct) {
+    // Handle case where product with the given id is not found
+    throw new Error('Product not found');
+  }
+
+  // Rename _id to id and remove __v in the response
+  const { _id, __v, ...removeIdV } = updatedProduct.toObject();
+  const updatedProductWithoutIdAndV = { id: _id, ...removeIdV };
+
+  // Add text indicating product has been updated
+  updatedProductWithoutIdAndV.text = 'Product has been updated';
+
+  return updatedProductWithoutIdAndV;
 }
 
 async function deleteProduct(id) {
-  return Product.findAndDelete(id);
-}
-// products-service.js
-async function masukKeranjang(userId, productId) {
-  // Implement logic to add product to user's cart
-}
+  const product = await Product.findById(id);
+  if (!product) {
+    return null;
+  }
 
-async function hapusKeranjang(userId, productId) {
-  // Implement logic to remove product from user's cart
+  try {
+    await Product.deleteOne({ _id: id });
+  } catch (err) {
+    return null;
+  }
+
+  return true;
 }
 
 module.exports = {
@@ -49,6 +72,4 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  masukKeranjang,
-  hapusKeranjang,
 };

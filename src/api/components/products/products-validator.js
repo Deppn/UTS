@@ -17,16 +17,4 @@ module.exports = {
       price: joi.number().min(0).required().label('Price'),
     },
   },
-  // products-validator.js
-  masukKeranjang: {
-    body: {
-      productId: joi.string().required().label('Product ID'),
-    },
-  },
-
-  hapusKeranjang: {
-    body: {
-      productId: joi.string().required().label('Product ID'),
-    },
-  },
 };

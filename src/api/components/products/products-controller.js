@@ -1,4 +1,5 @@
 const productsService = require('./products-service');
+const { errorResponder, errorTypes } = require('../../../core/errors');
 
 /**
  * Handle get list of users request
@@ -12,7 +13,7 @@ async function getProducts(request, response, next) {
   try {
     const products = await productsService.getProducts();
 
-    // Modify each product in the array to use id instead of _id and remove __v field
+    // merubah _id menjadi id dan menghilangkan __v
     const modifiedProducts = products.map((product) => {
       const { _id, __v, ...removeIdV } = product.toObject();
       return { id: _id, ...removeIdV };
@@ -24,6 +25,14 @@ async function getProducts(request, response, next) {
   }
 }
 
+/**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+
 async function getProduct(request, response, next) {
   try {
     const product = await productsService.getProduct(request.params.id);
@@ -31,7 +40,7 @@ async function getProduct(request, response, next) {
       return response.status(404).json({ message: 'Product not found' });
     }
 
-    // Modify the response object to use id instead of _id and remove __v field
+    // merubah _id menjadi id dan menghilangkan __v
     const { _id, __v, ...removeIdV } = product.toObject();
     const createdProduct = {
       id: _id,
@@ -43,7 +52,13 @@ async function getProduct(request, response, next) {
     return next(error);
   }
 }
-
+/**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function createProduct(request, response, next) {
   try {
     const { id, name, description, price } = request.body;
@@ -58,7 +73,13 @@ async function createProduct(request, response, next) {
     return next(error);
   }
 }
-
+/**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function updateProduct(request, response, next) {
   try {
     const { id } = request.params;
@@ -74,42 +95,24 @@ async function updateProduct(request, response, next) {
     return next(error);
   }
 }
-
+/**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function deleteProduct(request, response, next) {
   try {
-    const { id } = request.params;
-    await productsService.deleteProduct(id);
-    return response.status(204).end();
-  } catch (error) {
-    return next(error);
-  }
-}
-// products-controller.js
-async function masukKeranjang(request, response, next) {
-  try {
-    const { productId } = request.body;
-    const userId = request.user.id; // Assuming you have user information in the request
-
-    await productsService.masukKeranjang(userId, productId);
-
-    return response
-      .status(200)
-      .json({ message: 'Produk berhasil dimasukan ke keranjang' });
-  } catch (error) {
-    return next(error);
-  }
-}
-
-async function hapusKeranjang(request, response, next) {
-  try {
-    const { productId } = request.body;
-    const userId = request.user.id; // Assuming you have user information in the request
-
-    await productsService.hapusKeranjang(userId, productId);
-
-    return response
-      .status(200)
-      .json({ message: 'Produk telah di hapus dari keranjang' });
+    const id = request.params.id;
+    const success = await productsService.deleteProduct(id);
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to delete product'
+      );
+    }
+    return response.status(204).json({ id: id });
   } catch (error) {
     return next(error);
   }
@@ -121,6 +124,4 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  masukKeranjang,
-  hapusKeranjang,
 };

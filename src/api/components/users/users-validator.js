@@ -25,7 +25,7 @@ module.exports = {
   changePassword: {
     body: {
       old_password: joi.string().min(8).max(30).required(),
-      new_password: joi.string().min(8).max(30).required(), // contoh: password harus memiliki panjang minimal 8 karakter dan maksimal 30 karakter
+      new_password: joi.string().min(8).max(30).required(),
       confirm_new_password: joi.string().min(8).max(30).required(),
     },
   },

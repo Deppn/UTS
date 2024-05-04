@@ -36,40 +36,31 @@ async function getUsers(pageNumber, pageSize, search, sort) {
   let hasNextPage;
 
   if (!pageNumber || !pageSize) {
-    // Ambil total pengguna yang cocok dengan kriteria pencarian
     totalUsers = await User.countDocuments(filter);
-
-    // Hitung total halaman berdasarkan total pengguna dan ukuran halaman
+    // default halaman
     totalPages = 1;
-
-    // Ambil semua pengguna yang cocok dengan kriteria pencarian tanpa pembatasan halaman
-    users = await User.find(filter).sort({ [sortField]: sortOrder });
-
-    // Set nilai halaman ke 1 dan ukuran halaman ke total pengguna yang cocok
     pageNumber = 1;
     pageSize = totalUsers;
 
-    // Tandai bahwa tidak ada halaman sebelumnya atau berikutnya karena semua data ditampilkan di satu halaman
+    users = await User.find(filter).sort({ [sortField]: sortOrder });
+
+    // Tanda bahwa tidak ada halaman sebelumnya atau berikutnya karena semua data ditampilkan di satu halaman
     hasPreviousPage = false;
     hasNextPage = false;
   } else {
-    // Ambil pengguna yang cocok dengan kriteria pencarian dengan pembatasan halaman
+    // Ambil user yang cocok
     users = await User.find(filter)
       .sort({ [sortField]: sortOrder })
       .skip(skip)
       .limit(pageSize);
 
-    // Hitung total pengguna yang cocok dengan kriteria pencarian
     totalUsers = await User.countDocuments(filter);
-
-    // Hitung total halaman berdasarkan total pengguna dan ukuran halaman
     totalPages = Math.ceil(totalUsers / pageSize);
-
-    // Tentukan apakah ada halaman sebelumnya atau berikutnya
     hasPreviousPage = pageNumber > 1;
     hasNextPage = pageNumber < totalPages;
   }
 
+  //output
   return {
     page_number: pageNumber,
     page_size: pageSize,

@@ -23,18 +23,18 @@ async function checkLogin(email, password) {
   ) {
     const waktuLogin = currentTime - loginAttempts[email].lastAttempt;
     if (waktuLogin < LOGIN_ATTEMPT_RESET_TIME) {
-      // Return error if login attempts exceed limit and reset time has not elapsed
+      // mengembalikan error ketika melebihi limit
       throw errorResponder(
         errorTypes.FORBIDDEN,
         'Too many failed login attempts. Please try again later.'
       );
     } else {
-      // Reset login attempts if reset time has elapsed
+      // reset ketika sudah 30 mnt
       delete loginAttempts[email];
     }
   }
 
-  // Increment login attempt count
+  // menambahkan percobaan login
   if (!loginAttempts[email]) {
     loginAttempts[email] = { count: 0, lastAttempt: null };
   }
