@@ -1,4 +1,3 @@
-// src/api/components/products/products-validator.js
 const joi = require('joi');
 
 module.exports = {
@@ -19,13 +18,13 @@ module.exports = {
     },
   },
   // products-validator.js
-  addToCart: {
+  masukKeranjang: {
     body: {
       productId: joi.string().required().label('Product ID'),
     },
   },
 
-  removeFromCart: {
+  hapusKeranjang: {
     body: {
       productId: joi.string().required().label('Product ID'),
     },

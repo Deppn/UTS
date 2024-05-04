@@ -1,4 +1,3 @@
-// src/api/components/products/products-route.js
 const express = require('express');
 const productsController = require('./products-controller');
 const authenticationMiddleware = require('../../middlewares/authentication-middleware');
@@ -34,14 +33,14 @@ module.exports = (app) => {
   route.post(
     '/:purchase/add-to-cart',
     authenticationMiddleware,
-    celebrate(productsValidator.addToCart),
-    productsController.addToCart
+    celebrate(productsValidator.masukKeranjang),
+    productsController.masukKeranjang
   );
 
   route.delete(
     '/:purchase/remove-from-cart',
     authenticationMiddleware,
-    celebrate(productsValidator.removeFromCart),
-    productsController.removeFromCart
+    celebrate(productsValidator.hapusKeranjang),
+    productsController.hapusKeranjang
   );
 };

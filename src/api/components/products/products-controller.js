@@ -1,5 +1,12 @@
-// src/api/components/products/products-controller.js
 const productsService = require('./products-service');
+
+/**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 
 async function getProducts(request, response, next) {
   try {
@@ -78,31 +85,31 @@ async function deleteProduct(request, response, next) {
   }
 }
 // products-controller.js
-async function addToCart(request, response, next) {
+async function masukKeranjang(request, response, next) {
   try {
     const { productId } = request.body;
     const userId = request.user.id; // Assuming you have user information in the request
 
-    await productsService.addToCart(userId, productId);
+    await productsService.masukKeranjang(userId, productId);
 
     return response
       .status(200)
-      .json({ message: 'Product added to cart successfully' });
+      .json({ message: 'Produk berhasil dimasukan ke keranjang' });
   } catch (error) {
     return next(error);
   }
 }
 
-async function removeFromCart(request, response, next) {
+async function hapusKeranjang(request, response, next) {
   try {
     const { productId } = request.body;
     const userId = request.user.id; // Assuming you have user information in the request
 
-    await productsService.removeFromCart(userId, productId);
+    await productsService.hapusKeranjang(userId, productId);
 
     return response
       .status(200)
-      .json({ message: 'Product removed from cart successfully' });
+      .json({ message: 'Produk telah di hapus dari keranjang' });
   } catch (error) {
     return next(error);
   }
@@ -114,6 +121,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  addToCart,
-  removeFromCart,
+  masukKeranjang,
+  hapusKeranjang,
 };

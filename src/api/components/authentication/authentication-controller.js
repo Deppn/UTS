@@ -23,12 +23,12 @@ async function login(request, response, next) {
       if (attemptCount == 5) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
-          `User ${email} gagal login. Attempt = ${attemptCount}. Limit reached`
+          `User ${email} gagal login. Attempt : ${attemptCount}. Limit reached`
         );
       } else {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
-          `User ${email} gagal login. Attempt = ${attemptCount}`
+          `User ${email} gagal login. Attempt : ${attemptCount}`
         );
       }
     }

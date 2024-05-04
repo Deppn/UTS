@@ -1,4 +1,3 @@
-// src/api/components/products/products-repository.js
 const { Product } = require('../../../models');
 
 /**

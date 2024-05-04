@@ -1,4 +1,3 @@
-// src/api/components/products/products-service.js
 const { Product } = require('../../../models');
 
 async function getProducts() {
@@ -36,11 +35,11 @@ async function deleteProduct(id) {
   return Product.findAndDelete(id);
 }
 // products-service.js
-async function addToCart(userId, productId) {
+async function masukKeranjang(userId, productId) {
   // Implement logic to add product to user's cart
 }
 
-async function removeFromCart(userId, productId) {
+async function hapusKeranjang(userId, productId) {
   // Implement logic to remove product from user's cart
 }
 
@@ -50,6 +49,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  addToCart,
-  removeFromCart,
+  masukKeranjang,
+  hapusKeranjang,
 };
